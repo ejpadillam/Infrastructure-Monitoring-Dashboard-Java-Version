@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+    <!-- 
+    ¿Qué es pom.xml?
+    Es el archivo de configuración de Maven (similar a requirements.txt en Python)
+    Define dependencias, plugins, y configuración del proyecto
+    -->
+    
+    <modelVersion>4.0.0</modelVersion>
+    
+    <!-- Identificación del proyecto -->
+    <groupId>com.ericpadilla</groupId>
+    <!-- groupId: Identifica tu organización/proyecto (como un package) -->
+    
+    <artifactId>monitoring-dashboard</artifactId>
+    <!-- artifactId: Nombre del proyecto -->
+    
+    <version>1.0.0</version>
+    <!-- version: Versión del proyecto -->
+    
+    <packaging>war</packaging>
+    <!-- 
+    packaging: Tipo de archivo a generar
+    - war: Web Application Archive (para deploy en Tomcat)
+    - jar: Java Archive (para aplicaciones standalone)
+    -->
+    
+    <name>Infrastructure Monitoring Dashboard</name>
+    <description>Real-time infrastructure monitoring dashboard using Java Servlets</description>
+    
+    <!-- Propiedades del proyecto -->
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <!-- Versión de Java para compilar (mínimo Java 17) -->
+        
+        <maven.compiler.target>17</maven.compiler.target>
+        <!-- Versión de Java objetivo (bytecode compatible con Java 17) -->
+        
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Encoding de archivos fuente (UTF-8 para soportar ñ, á, etc.) -->
+        
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+        <!-- No fallar si web.xml no existe (usaremos anotaciones) -->
+    </properties>
+    
+    <!-- Dependencias del proyecto -->
+    <dependencies>
+        
+        <!-- Jakarta Servlet API -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>5.0.0</version>
+            <scope>provided</scope>
+            <!-- 
+            Servlet API: Para crear servlets
+            scope="provided": Tomcat ya lo incluye, no empaquetar en WAR
+            
+            ¿Qué es un Servlet?
+            Clase Java que maneja HTTP requests (como Flask routes)
+            -->
+        </dependency>
+        
+        <!-- JSP API -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
+            <version>3.0.0</version>
+            <scope>provided</scope>
+            <!-- 
+            JSP: JavaServer Pages
+            HTML con código Java embebido (similar a Jinja2 templates)
+            -->
+        </dependency>
+        
+        <!-- JSTL (JSP Standard Tag Library) -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        
+        <!-- Gson - Google JSON Library -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+            <!-- 
+            Gson: Convierte objetos Java a JSON y viceversa
+            Similar a: json.dumps() en Python o JSON.stringify() en JS
+            
+            Uso:
+            Gson gson = new Gson();
+            String json = gson.toJson(objetoJava);
+            -->
+        </dependency>
+        
+        <!-- SLF4J - Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.9</version>
+            <!-- 
+            Logging framework (mejor que System.out.println)
+            
+            Uso:
+            Logger logger = LoggerFactory.getLogger(MiClase.class);
+            logger.info("Mensaje de log");
+            logger.error("Error!", exception);
+            -->
+        </dependency>
+        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+        
+    </dependencies>
+    
+    <!-- Plugins de Maven -->
+    <build>
+        <finalName>monitoring-dashboard</finalName>
+        <!-- Nombre final del WAR: monitoring-dashboard.war -->
+        
+        <plugins>
+            
+            <!-- Plugin del compilador -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+            
+            <!-- Plugin WAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <warName>monitoring-dashboard</warName>
+                </configuration>
+            </plugin>
+            
+            <!-- Tomcat Maven Plugin (para ejecutar sin instalar Tomcat) -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <path>/monitoring-dashboard</path>
+                    <port>8080</port>
+                    <!-- 
+                    Esto permite ejecutar: mvn tomcat7:run
+                    Iniciará Tomcat embedido en http://localhost:8080/monitoring-dashboard
+                    -->
+                </configuration>
+            </plugin>
+            
+        </plugins>
+    </build>
+    
+</project>
